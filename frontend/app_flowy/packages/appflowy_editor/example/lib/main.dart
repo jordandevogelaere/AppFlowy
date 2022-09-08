@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:example/plugin/underscore_to_italic_key_event_handler.dart';
+import 'package:example/plugin/whatsapp_button/whatsapp_node_builder.dart';
+import 'package:example/plugin/whatsapp_button/whatsapp_upload_widget.dart';
+import 'package:example/plugin/youtube_link_node_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -96,8 +98,39 @@ class _MyHomePageState extends State<MyHomePage> {
             child: AppFlowyEditor(
               editorState: _editorState,
               editorStyle: const EditorStyle.defaultStyle(),
-              shortcutEvents: [
+              /*shortcutEvents: [
                 underscoreToItalicEvent,
+              ],*/
+              customBuilders: {
+                'youtube': YouTubeLinkNodeBuilder(),
+                'whatsapp': WhatsappNodeBuilder(),
+                //'text/number-list': NumberedListTextNodeWidgetBuilder(),
+              },
+              selectionMenuItems: [
+                SelectionMenuItem(
+                  name: "Youtube",
+                  icon: const FlowySvg(
+                    name: 'selection_menu/quote',
+                    color: Colors.black,
+                    width: 18.0,
+                    height: 18.0,
+                  ),
+                  keywords: ['youtube'],
+                  handler: showYoutubeUrl,
+                ),
+                SelectionMenuItem(
+                  name: 'Whatsapp',
+                  icon: const FlowySvg(
+                    name: 'selection_menu/bulleted_list',
+                    color: Colors.black,
+                    width: 18.0,
+                    height: 18.0,
+                  ),
+                  keywords: ['whatsapp'],
+                  handler: (editorState, _, __) {
+                    _editorState.insertWhatsappNode("12345428050");
+                  },
+                ),
               ],
             ),
           );
@@ -126,9 +159,7 @@ class _MyHomePageState extends State<MyHomePage> {
           icon: const Icon(Icons.abc),
           onPressed: () => _switchToPage(2),
         ),
-        ActionButton(
-            icon: const Icon(Icons.print),
-            onPressed: () => {_exportDocument(_editorState)}),
+        ActionButton(icon: const Icon(Icons.print), onPressed: () => {_exportDocument(_editorState)}),
         ActionButton(
           icon: const Icon(Icons.import_export),
           onPressed: () => _importDocument(),

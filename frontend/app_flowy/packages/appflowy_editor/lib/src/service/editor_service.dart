@@ -3,6 +3,7 @@ import 'package:appflowy_editor/src/render/selection_menu/selection_menu_widget.
 import 'package:appflowy_editor/src/render/style/editor_style.dart';
 import 'package:appflowy_editor/src/service/shortcut_event/built_in_shortcut_events.dart';
 import 'package:appflowy_editor/src/service/shortcut_event/shortcut_event.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:appflowy_editor/src/editor_state.dart';
@@ -94,10 +95,14 @@ class _AppFlowyEditorState extends State<AppFlowyEditor> {
             editorState: editorState,
             child: AppFlowyKeyboard(
               key: editorState.service.keyboardServiceKey,
-              shortcutEvents: [
+              shortcutEvents: kIsWeb ? [] : [
                 ...builtInShortcutEvents,
                 ...widget.shortcutEvents,
               ],
+              /*shortcutEvents: [
+                ...builtInShortcutEvents,
+                ...widget.shortcutEvents,
+              ],*/
               editorState: editorState,
               child: FlowyToolbar(
                 key: editorState.service.toolbarServiceKey,

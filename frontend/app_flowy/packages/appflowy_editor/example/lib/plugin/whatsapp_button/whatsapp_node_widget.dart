@@ -6,33 +6,40 @@ import 'package:appflowy_editor/src/infra/flowy_svg.dart';
 import 'package:appflowy_editor/src/render/selection/selectable.dart';
 import 'package:flutter/material.dart';
 
-class ImageNodeWidget extends StatefulWidget {
-  const ImageNodeWidget({
+class WhatsappConfig {
+  final String number;
+  final String message;
+
+  WhatsappConfig(this.number, this.message);
+}
+
+class WhatsAppNodeWidget extends StatefulWidget {
+  const WhatsAppNodeWidget({
     Key? key,
     required this.node,
-    required this.src,
+    required this.config,
     this.width,
     required this.alignment,
-    required this.onCopy,
+    required this.onEdit,
     required this.onDelete,
     required this.onAlign,
     required this.onResize,
   }) : super(key: key);
 
   final Node node;
-  final String src;
+  final WhatsappConfig config;
   final double? width;
   final Alignment alignment;
-  final VoidCallback onCopy;
+  final VoidCallback onEdit;
   final VoidCallback onDelete;
   final void Function(Alignment alignment) onAlign;
   final void Function(double width) onResize;
 
   @override
-  State<ImageNodeWidget> createState() => _ImageNodeWidgetState();
+  State<WhatsAppNodeWidget> createState() => _WhatsAppNodeWidgetState();
 }
 
-class _ImageNodeWidgetState extends State<ImageNodeWidget>
+class _WhatsAppNodeWidgetState extends State<WhatsAppNodeWidget>
     with SelectableMixin {
   final _imageKey = GlobalKey();
 
@@ -41,28 +48,13 @@ class _ImageNodeWidgetState extends State<ImageNodeWidget>
   double _distance = 0;
   bool _onFocus = false;
 
-  ImageStream? _imageStream;
-  late ImageStreamListener _imageStreamListener;
-
   @override
   void initState() {
     super.initState();
-
-    _imageWidth = widget.width;
-    _imageStreamListener = ImageStreamListener(
-      (image, _) {
-        _imageWidth = _imageKey.currentContext
-            ?.findRenderObject()
-            ?.unwrapOrNull<RenderBox>()
-            ?.size
-            .width;
-      },
-    );
   }
 
   @override
   void dispose() {
-    _imageStream?.removeListener(_imageStreamListener);
     super.dispose();
   }
 
@@ -127,30 +119,24 @@ class _ImageNodeWidgetState extends State<ImageNodeWidget>
         onExit: (event) => setState(() {
           _onFocus = false;
         }),
-        child: _buildResizableImage(context),
+        child: _buildResizableWhatsappButton(context),
       ),
     );
   }
 
-  Widget _buildResizableImage(BuildContext context) {
-    final networkImage = Image.network(
-      widget.src,
-      width: _imageWidth == null ? null : _imageWidth! - _distance,
-      gaplessPlayback: true,
-      loadingBuilder: (context, child, loadingProgress) =>
-          loadingProgress == null ? child : _buildLoading(context),
-      errorBuilder: (context, error, stackTrace) {
-        // _imageWidth ??= defaultMaxTextNodeWidth;
-        return _buildError(context);
-      },
-    );
-    if (_imageWidth == null) {
-      _imageStream = networkImage.image.resolve(const ImageConfiguration())
-        ..addListener(_imageStreamListener);
-    }
+  Widget _buildResizableWhatsappButton(BuildContext context) {
     return Stack(
       children: [
-        networkImage,
+        Padding(
+            padding: EdgeInsets.all(8.0),
+            child: ElevatedButton(
+              onPressed: () => {},
+              style: ElevatedButton.styleFrom(
+                primary: Colors.green,
+                onPrimary: Colors.white,
+              ),
+              child: Text("Whatsapp button"),
+            )),
         _buildEdgeGesture(
           context,
           top: 0,
@@ -176,49 +162,16 @@ class _ImageNodeWidgetState extends State<ImageNodeWidget>
           },
         ),
         if (_onFocus)
-          ImageToolbar(
+          WhatsAppToolbar(
             top: 8,
             right: 8,
             height: 30,
             alignment: widget.alignment,
             onAlign: widget.onAlign,
-            onCopy: widget.onCopy,
+            onEdit: widget.onEdit,
             onDelete: widget.onDelete,
           )
       ],
-    );
-  }
-
-  Widget _buildLoading(BuildContext context) {
-    return SizedBox(
-      height: 150,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox.fromSize(
-            size: const Size(18, 18),
-            child: const CircularProgressIndicator(),
-          ),
-          SizedBox.fromSize(
-            size: const Size(10, 10),
-          ),
-          const Text('Loading'),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildError(BuildContext context) {
-    return Container(
-      height: 100,
-      width: _imageWidth,
-      alignment: Alignment.center,
-      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(4.0)),
-        border: Border.all(width: 1, color: Colors.black),
-      ),
-      child: const Text('Could not load the image'),
     );
   }
 
@@ -275,14 +228,14 @@ class _ImageNodeWidgetState extends State<ImageNodeWidget>
 }
 
 @visibleForTesting
-class ImageToolbar extends StatelessWidget {
-  const ImageToolbar({
+class WhatsAppToolbar extends StatelessWidget {
+  const WhatsAppToolbar({
     Key? key,
     required this.top,
     required this.right,
     required this.height,
     required this.alignment,
-    required this.onCopy,
+    required this.onEdit,
     required this.onDelete,
     required this.onAlign,
   }) : super(key: key);
@@ -291,7 +244,7 @@ class ImageToolbar extends StatelessWidget {
   final double right;
   final double height;
   final Alignment alignment;
-  final VoidCallback onCopy;
+  final VoidCallback onEdit;
   final VoidCallback onDelete;
   final void Function(Alignment alignment) onAlign;
 
@@ -367,11 +320,9 @@ class ImageToolbar extends StatelessWidget {
               hoverColor: Colors.transparent,
               constraints: const BoxConstraints(),
               padding: const EdgeInsets.fromLTRB(4.0, 4.0, 0.0, 4.0),
-              icon: const FlowySvg(
-                name: 'image_toolbar/copy',
-              ),
+              icon: const Icon(Icons.edit),
               onPressed: () {
-                onCopy();
+                onEdit();
               },
             ),
             IconButton(

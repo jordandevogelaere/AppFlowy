@@ -34,6 +34,12 @@ void insertBulletedListAfterSelection(EditorState editorState) {
   });
 }
 
+void insertNumberedListAfterSelection(EditorState editorState) {
+  insertTextNodeAfterSelection(editorState, {
+    StyleKey.subtype: StyleKey.numberList,
+  });
+}
+
 bool insertTextNodeAfterSelection(
     EditorState editorState, Attributes attributes) {
   final selection = editorState.service.selectionService.currentSelection.value;

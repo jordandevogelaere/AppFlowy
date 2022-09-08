@@ -162,6 +162,14 @@ final List<SelectionMenuItem> _defaultSelectionMenuItems = [
     },
   ),
   SelectionMenuItem(
+    name: 'Numbered list',
+    icon: _selectionMenuIcon('number'),
+    keywords: ['numbered list', 'list', 'orderd list'],
+    handler: (editorState, _, __) {
+      insertNumberedListAfterSelection(editorState);
+    },
+  ),
+  SelectionMenuItem(
     name: 'Checkbox',
     icon: _selectionMenuIcon('checkbox'),
     keywords: ['todo list', 'list', 'checkbox list'],

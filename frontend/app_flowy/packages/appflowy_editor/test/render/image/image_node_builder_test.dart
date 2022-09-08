@@ -11,7 +11,7 @@ void main() async {
     TestWidgetsFlutterBinding.ensureInitialized();
   });
 
-  group('image_node_builder.dart', () {
+  group('whatsapp_node_builder.dart', () {
     testWidgets('render image node', (tester) async {
       mockNetworkImagesFor(() async {
         const text = 'Welcome to Appflowy 😁';

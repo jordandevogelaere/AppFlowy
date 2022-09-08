@@ -12,7 +12,7 @@ void main() async {
     TestWidgetsFlutterBinding.ensureInitialized();
   });
 
-  group('image_node_widget.dart', () {
+  group('whatsapp_node_widget.dart', () {
     testWidgets('build the image node widget', (tester) async {
       mockNetworkImagesFor(() async {
         var onCopyHit = false;

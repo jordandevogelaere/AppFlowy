@@ -1,5 +1,6 @@
 import 'package:appflowy_editor/src/document/node.dart';
 import 'package:appflowy_editor/src/editor_state.dart';
+import 'package:appflowy_editor/src/extensions/text_node_extensions.dart';
 import 'package:appflowy_editor/src/infra/flowy_svg.dart';
 import 'package:appflowy_editor/src/render/rich_text/default_selectable.dart';
 import 'package:appflowy_editor/src/render/rich_text/flowy_rich_text.dart';
@@ -20,7 +21,7 @@ class NumberListTextNodeWidgetBuilder extends NodeWidgetBuilder<TextNode> {
 
   @override
   NodeValidator<Node> get nodeValidator => ((node) {
-        return node.attributes.number != null;
+        return true;
       });
 }
 
@@ -66,7 +67,7 @@ class _NumberListTextNodeWidgetState extends State<NumberListTextNodeWidget>
               width: _iconWidth,
               height: _iconWidth,
               padding: EdgeInsets.only(right: _iconRightPadding),
-              number: widget.textNode.attributes.number,
+              number: widget.textNode.attributes.number ?? 1,
             ),
             Flexible(
               child: FlowyRichText(
