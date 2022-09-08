@@ -127,8 +127,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     height: 18.0,
                   ),
                   keywords: ['whatsapp'],
-                  handler: (editorState, _, __) {
+                  handler: (editorState, menuService, __) {
                     _editorState.insertWhatsappNode("12345428050");
+                    menuService.dismiss();
                   },
                 ),
               ],

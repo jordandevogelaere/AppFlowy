@@ -43,7 +43,7 @@ class _WhatsAppNodeWidgetState extends State<WhatsAppNodeWidget>
     with SelectableMixin {
   final _imageKey = GlobalKey();
 
-  double? _imageWidth;
+  double? _buttonWidth = 380;
   double _initial = 0;
   double _distance = 0;
   bool _onFocus = false;
@@ -132,6 +132,7 @@ class _WhatsAppNodeWidgetState extends State<WhatsAppNodeWidget>
             child: ElevatedButton(
               onPressed: () => {},
               style: ElevatedButton.styleFrom(
+                fixedSize: Size(_buttonWidth ?? 0.0, 68),
                 primary: Colors.green,
                 onPrimary: Colors.white,
               ),
@@ -200,11 +201,11 @@ class _WhatsAppNodeWidgetState extends State<WhatsAppNodeWidget>
           }
         },
         onHorizontalDragEnd: (details) {
-          _imageWidth = _imageWidth! - _distance;
+          _buttonWidth = _buttonWidth! - _distance;
           _initial = 0;
           _distance = 0;
 
-          widget.onResize(_imageWidth!);
+          widget.onResize(_buttonWidth!);
         },
         child: MouseRegion(
           cursor: SystemMouseCursors.resizeLeftRight,
